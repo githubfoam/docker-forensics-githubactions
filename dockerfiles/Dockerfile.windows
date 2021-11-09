@@ -1,0 +1,9 @@
+# https://hub.docker.com/_/sl
+# https://github.com/scientificlinux/sl-docker
+FROM scientificlinux/sl:latest 
+LABEL org.opencontainers.image.authors="githubfoam"
+
+
+RUN yum update -y && yum clean all
+
+WORKDIR /tmp

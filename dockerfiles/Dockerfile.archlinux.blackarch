@@ -1,0 +1,28 @@
+FROM archlinux:base
+LABEL org.opencontainers.image.authors="githubfoam"
+
+WORKDIR /tmp
+
+RUN pacman -Syu --noconfirm
+
+#Download the BackArch Setup Script
+RUN pacman -S curl && \
+    cd ~/Downloads && \
+    curl -O https://blackarch.org/strap.sh && \
+    sha1sum strap.sh && \
+    #Run The BlackArch Setup Script
+    chmod +x strap.sh && \
+    ./strap.sh
+
+#Install a Package from BlackArch,list out everything available from BlackArch
+RUN pacman -Sgg | grep blackarch | cut -d’ ‘ -f2 | sort -u && \
+    #looking for Metasploit
+    pacman -Sgg | grep blackarch | cut -d’ ‘ -f2 | grep -i meta && \
+    pacman -S metasploit
+
+#package categories 
+RUN pacman -Sg | grep blackarch && \
+    #install blackarch-cryptography category
+    pacman -S blackarch-cryptography && \
+    #install blackarch-wireless category
+    pacman -Sgg | grep blackarch-wireless

@@ -1,0 +1,14 @@
+# In order to run a container with systemd, 
+# you will need to mount the cgroups volumes from the host.
+FROM sl:7
+ENV container docker
+### This example enables httpd via systemd within the container
+RUN yum -y install httpd && yum clean all && systemctl enable httpd.service
+EXPOSE 80
+### End of example commands for httpd via systemd
+VOLUME [ "/sys/fs/cgroup" ]
+CMD ["/usr/sbin/init"]
+
+RUN dnf update -y
+
+WORKDIR /tmp
