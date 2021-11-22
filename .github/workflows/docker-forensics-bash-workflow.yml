@@ -8,8 +8,33 @@ on:
 
 jobs:
 
-  ubuntu-latest-job:
-    name: "docker forensics ubuntu latest"
+  ubuntu-apache2-latest-job:
+    name: "apache2 ubuntu latest"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting"
+      run: |
+        hostnamectl status
+        lsb_release -a
+        lsb_release -d
+        cat /etc/lsb-release
+        cat /etc/issue
+        cat /etc/os-release
+        sudo apt-get install -y neofetch && neofetch  
+    - name: "os fingerprinting"
+      run: |
+        docker run -d --name apache2-container -e TZ=UTC -p \
+          8080:80 ubuntu/apache2:2.4-21.10_beta
+        netstat -plan | grep ":8080"
+        netstat -plan
+        # curl http://localhost:8080
+        docker logs -f apache2-container
+        # interactive shell
+        # docker exec -it apache2-container /bin/bash
+
+  ubuntu-container-diff-latest-job:
+    name: "container-diff ubuntu latest"
     runs-on: ubuntu-latest
     env:
       distribution: "archlinux" #https://hub.docker.com/_/archlinux
