@@ -1,0 +1,55 @@
+name: "wapiti CI workflow"
+
+
+on:
+  push:
+    branches: [ test ]
+
+
+jobs:
+
+  
+  ubuntu-latest-wapiti-job:
+    name: "wapiti ubuntu latest"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting"
+      run: |
+        hostnamectl status
+        lsb_release -a
+        lsb_release -d
+        cat /etc/lsb-release
+        cat /etc/issue
+        cat /etc/os-release
+        sudo apt-get install -y neofetch && neofetch
+    # Installing Wapiti using a virtual environment
+    # https://github.com/wapiti-scanner/wapiti/blob/master/INSTALL.md
+    - name: "Installing Wapiti using a virtual environment"
+      run: |
+        python -m venv wapiti3
+        ./wapiti3/bin/activate
+        git clone https://github.com/wapiti-scanner/wapiti.git
+        python3 setup.py install
+        # https://github.com/OWASP/OWASP-VWAD/blob/master/src/data/online.json
+        # use the SQL, XSS and XXE modules when scanning the target.
+        wapiti -u http://testphp.vulnweb.com -m sql,xss,xxe
+        wapiti -u http://testphp.vulnweb.com -m sql,xss,xxe
+        deactivate        
+    - name: "Installing Wapiti using a virtual environment - pip"
+      run: |
+        python -m venv wapiti3
+        ./wapiti3/bin/activate
+        git clone https://github.com/wapiti-scanner/wapiti.git
+        pip install wapiti3
+        deactivate         
+    - name: "Installing Wapiti without virtual environment"
+      run: |
+        git clone https://github.com/wapiti-scanner/wapiti.git
+        python3 setup.py install
+        deactivate
+    - name: "Installing Wapiti without virtual environment - pip"
+      run: |
+        git clone https://github.com/wapiti-scanner/wapiti.git
+        pip install wapiti3
+        deactivate

@@ -30,7 +30,7 @@ jobs:
     - name: "Container modification"
       run: |
         docker run -d --name wordpress wluns32/wordpress-lamp
-        container ls
+        docker container ls
         # find the modifications done to this container respecting to the image 
         #D - Deleted File
         #C - Changed File
@@ -38,7 +38,7 @@ jobs:
         docker diff wordpress      
         # download it from the container to check for malicious activity with
         docker cp wordpress:/etc/shadow .
-        docker run -d --name wordpress-orig wluns32/wordpress-lamp
+        docker run -d --name wordpress-orig wluns32/wordpress-lamp &
         # compare it with the original one running a new container 
         docker cp wordpress-orig:/etc/shadow original_shadow
         diff original_shadow shadow

@@ -25,6 +25,7 @@ jobs:
         sudo apt-get install -y neofetch && neofetch   
     - name: "image modifications"
       run: |
+        docker run -d --name wordpress-orig wluns32/wordpress-lamp &
         # given an exported docker image
         # use container-diff to extract a summary of the modifications
         #Export the image to a .tar file

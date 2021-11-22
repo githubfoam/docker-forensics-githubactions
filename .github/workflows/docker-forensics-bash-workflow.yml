@@ -22,13 +22,13 @@ jobs:
         cat /etc/issue
         cat /etc/os-release
         sudo apt-get install -y neofetch && neofetch  
-    - name: "os fingerprinting"
+    - name: "apache2 image"
       run: |
         #run on the background
         docker run -d --name apache2-container -e TZ=UTC -p 8080:80 ubuntu/apache2:2.4-21.10_beta &
-        netstat -plan | grep ":8080"
-        netstat -plan
+        # netstat -plan | grep ":8080"
+        # netstat -plan
         # curl http://localhost:8080
-        docker logs -f apache2-container
+        # docker logs -f apache2-container
         # interactive shell
         # docker exec -it apache2-container /bin/bash
