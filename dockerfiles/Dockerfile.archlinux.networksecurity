@@ -1,9 +1,0 @@
-FROM archlinux:base
-LABEL org.opencontainers.image.authors="githubfoam"
-
-RUN pacman -Syu --noconfirm
-
-# https://wiki.archlinux.org/title/List_of_applications/Security
-RUN pacman -S --noconfirm  hping 
-
-WORKDIR /home/ansible

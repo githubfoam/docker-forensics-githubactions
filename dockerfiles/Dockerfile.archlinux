@@ -1,7 +1,0 @@
-FROM archlinux:base
-LABEL org.opencontainers.image.authors="githubfoam"
-
-RUN pacman -Syu --noconfirm
-RUN pacman -S ansible --noconfirm && ansible --version
-
-WORKDIR /home/ansible

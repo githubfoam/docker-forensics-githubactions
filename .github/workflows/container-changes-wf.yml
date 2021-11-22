@@ -45,13 +45,4 @@ jobs:
         # diff original_shadow shadow
         # # access the container and check it, non-interactive
         # docker exec -it wordpress ls -lai /etc/shadow
-    - name: "docker build blackarchlinux base"
-      run: |
-        # destroyed afterwards (use --rm )
-        # all subsequent Dockerfile commands generate new images and the cache is not used
-        sudo docker build --no-cache --rm  -t ${name}/${version} . --file dockerfiles/${dockerfilename} 
-        docker image ls
-        docker image history ${name}/${version} 
-        docker system df -v               
-        docker logs -f ${name}/${version} 
-        docker diff -f ${name}/${version} 
+ 
