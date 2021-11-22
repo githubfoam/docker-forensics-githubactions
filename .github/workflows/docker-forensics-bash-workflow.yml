@@ -33,8 +33,8 @@ jobs:
         # interactive shell
         # docker exec -it apache2-container /bin/bash
 
-  ubuntu-container-diff-latest-job:
-    name: "container-diff ubuntu latest"
+  ubuntu-container-modification-latest-job:
+    name: "container modification ubuntu latest"
     runs-on: ubuntu-latest
     env:
       distribution: "archlinux" #https://hub.docker.com/_/archlinux
@@ -52,13 +52,23 @@ jobs:
         cat /etc/issue
         cat /etc/os-release
         sudo apt-get install -y neofetch && neofetch   
-    - name: "docker pull archlinux container-diff"
+    - name: "Container modification"
       run: |
-        # sudo docker pull ${distribution}/${version}
-        sudo docker pull ${distribution}
-        docker image ls  
-        pacman -S container-diff
-        container-diff analyze ${distribution}
+        docker run -d --name wordpress wluns32/wordpress-lamp
+        container ls
+        # find the modifications done to this container respecting to the image 
+        #D - Deleted File
+        #C - Changed File
+        #A - Added File
+        docker diff wordpress      
+        # download it from the container to check for malicious activity with
+        docker cp wordpress:/etc/shadow .
+        docker run -d --name wordpress-orig wluns32/wordpress-lamp
+        # compare it with the original one running a new container 
+        docker cp wordpress-orig:/etc/shadow original_shadow
+        diff original_shadow shadow
+        # access the container and check it, non-interactive
+        docker exec -it wordpress ls -lai /etc/shadow
     - name: "docker build archlinux base"
       run: |
         # destroyed afterwards (use --rm )
@@ -67,15 +77,44 @@ jobs:
         docker image ls
         docker image history ${name}/${version} 
         docker system df -v               
-        docker image inspect ${name}/${version} 
-    - name: "docker build archlinux base"
+        docker logs -f ${name}/${version} 
+        docker diff -f ${name}/${version} 
+
+  ubuntu-image-modification-latest-job:
+    name: "image modification ubuntu latest"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting"
       run: |
-        # destroyed afterwards (use --rm )
-        # all subsequent Dockerfile commands generate new images and the cache is not used
-        sudo docker build --no-cache --rm  -t ${name}/${version} . --file dockerfiles/${dockerfilename} 
-        curl -LO https://storage.googleapis.com/container-diff/latest/container-diff-linux-amd64
-        install container-diff-linux-amd64 /usr/local/bin/container-diff
-        container-diff analyze ${name}/${version}
+        hostnamectl status
+        lsb_release -a
+        lsb_release -d
+        cat /etc/lsb-release
+        cat /etc/issue
+        cat /etc/os-release
+        sudo apt-get install -y neofetch && neofetch   
+    - name: "image modifications"
+      run: |
+        # given an exported docker image
+        # use container-diff to extract a summary of the modifications
+        #Export the image to a .tar file
+        docker save wluns32/wordpress-lamp > image.tar 
+        container-diff analyze -t sizelayer image.tar
+        container-diff analyze -t history image.tar
+        container-diff analyze -t metadata image.tar
+        # decompress the image and access the blobs to search for suspicious files 
+        tar -xf image.tar
+        #Export the image to a .tar file
+        docker save flask:latest > image.tar 
+        docker load < image.tar 
+        # find added/modified files in docker images
+        # Red means added and yellow means modified  
+        #  no access the content of the different stages of the image      
+        dive flask:latest
+        tar -xf image.tar
+        for d in `find * -maxdepth 0 -type d`; do cd $d; tar -xf ./layer.tar; cd ..; done
+
 
   # ubuntu-latest-job:
   #   name: "docker archlinux ubuntu latest"
