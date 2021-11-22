@@ -25,8 +25,7 @@ jobs:
     - name: "os fingerprinting"
       run: |
         #run on the background
-        docker run -d --name apache2-container -e TZ=UTC -p \
-          8080:80 ubuntu/apache2:2.4-21.10_beta &
+        docker run -d --name apache2-container -e TZ=UTC -p 8080:80 ubuntu/apache2:2.4-21.10_beta &
         netstat -plan | grep ":8080"
         netstat -plan
         # curl http://localhost:8080

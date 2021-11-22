@@ -47,7 +47,7 @@ jobs:
         ratarmount evidence_img_wordpress.tard /evidence/mount/
     - name: "ratarmount image modifications"
       run: |
-        docker run -d --name wordpress-orig wluns32/wordpress-lamp
+        sudo docker run -d --name wordpress-orig wluns32/wordpress-lamp
         # save the current state of a container, including all the changes to a new image
         docker commit "current state of image" wordpress-orig wordpress-orig-curr
         #makes a tar archive of the image to be imported
