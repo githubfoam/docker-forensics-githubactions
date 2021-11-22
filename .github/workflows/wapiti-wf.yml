@@ -28,14 +28,14 @@ jobs:
     - name: "Installing Wapiti using a virtual environment"
       run: |
         python -m venv wapiti3
-        ./wapiti3/bin/activate
-        git clone https://github.com/wapiti-scanner/wapiti.git
-        python3 setup.py install
-        # https://github.com/OWASP/OWASP-VWAD/blob/master/src/data/online.json
-        # use the SQL, XSS and XXE modules when scanning the target.
-        wapiti -u http://testphp.vulnweb.com -m sql,xss,xxe
-        wapiti -u http://testphp.vulnweb.com -m sql,xss,xxe
-        deactivate        
+        # ./wapiti3/bin/activate
+        # git clone https://github.com/wapiti-scanner/wapiti.git
+        # python3 setup.py install
+        # # https://github.com/OWASP/OWASP-VWAD/blob/master/src/data/online.json
+        # # use the SQL, XSS and XXE modules when scanning the target.
+        # wapiti -u http://testphp.vulnweb.com -m sql,xss,xxe
+        # wapiti -u http://testphp.vulnweb.com -m sql,xss,xxe
+        # deactivate        
     - name: "Installing Wapiti using a virtual environment - pip"
       run: |
         python -m venv wapiti3

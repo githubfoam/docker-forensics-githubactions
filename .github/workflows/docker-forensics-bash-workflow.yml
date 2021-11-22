@@ -26,7 +26,8 @@ jobs:
       run: |
         #run on the background
         docker run -d --name apache2-container -e TZ=UTC -p 8080:80 ubuntu/apache2:2.4-21.10_beta &
-        sudo netstat -plan | grep ":8080"
+        apt list --installed | grep netstat
+        # sudo netstat -plan | grep ":8080"
         # netstat -plan
         # curl http://localhost:8080
         # docker logs -f apache2-container

@@ -12,7 +12,7 @@ RUN pacman -S curl && \
     sha1sum strap.sh && \
     #Run The BlackArch Setup Script
     chmod +x strap.sh && \
-    ./strap.sh
+    yes | ./strap.sh
 
 #Install a Package from BlackArch,list out everything available from BlackArch
 RUN pacman -Sgg | grep blackarch | cut -d’ ‘ -f2 | sort -u && \

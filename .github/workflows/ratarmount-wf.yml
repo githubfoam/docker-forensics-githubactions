@@ -9,8 +9,8 @@ on:
 jobs:
 
 
-  ubuntu-image-modification-latest-job:
-    name: "image modification ubuntu latest"
+  ubuntu-latest-ratarmount-job:
+    name: "ratarmount ubuntu latest"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
       run: |
         sudo docker run -d --name wordpress-orig wluns32/wordpress-lamp
         # save the current state of a container, including all the changes to a new image
-        docker commit "current state of image" wordpress-orig wordpress-orig-curr
+        docker commit -m "current state of image" wordpress-orig wordpress-orig-curr
         #makes a tar archive of the image to be imported
         docker export wordpress-orig > evidence_img_wordpress.tar
         # https://github.com/mxmlnkn/ratarmount#installation
