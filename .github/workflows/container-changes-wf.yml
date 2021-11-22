@@ -1,0 +1,56 @@
+name: "container modification  CI workflow"
+
+
+on:
+  push:
+    branches: [ test ]
+
+
+jobs:
+
+  ubuntu-container-modification-latest-job:
+    name: "container modification ubuntu latest"
+    runs-on: ubuntu-latest
+    env:
+      distribution: "archlinux" #https://hub.docker.com/_/archlinux
+      version: "latest"
+      name: "archlinux/blackarch"
+      dockerfilename: "Dockerfile.archlinux.blackarch"
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting"
+      run: |
+        hostnamectl status
+        lsb_release -a
+        lsb_release -d
+        cat /etc/lsb-release
+        cat /etc/issue
+        cat /etc/os-release
+        sudo apt-get install -y neofetch && neofetch   
+    - name: "Container modification"
+      run: |
+        docker run -d --name wordpress wluns32/wordpress-lamp
+        container ls
+        # find the modifications done to this container respecting to the image 
+        #D - Deleted File
+        #C - Changed File
+        #A - Added File
+        docker diff wordpress      
+        # download it from the container to check for malicious activity with
+        docker cp wordpress:/etc/shadow .
+        docker run -d --name wordpress-orig wluns32/wordpress-lamp
+        # compare it with the original one running a new container 
+        docker cp wordpress-orig:/etc/shadow original_shadow
+        diff original_shadow shadow
+        # access the container and check it, non-interactive
+        docker exec -it wordpress ls -lai /etc/shadow
+    - name: "docker build archlinux base"
+      run: |
+        # destroyed afterwards (use --rm )
+        # all subsequent Dockerfile commands generate new images and the cache is not used
+        sudo docker build --no-cache --rm  -t ${name}/${version} . --file dockerfiles/${dockerfilename} 
+        docker image ls
+        docker image history ${name}/${version} 
+        docker system df -v               
+        docker logs -f ${name}/${version} 
+        docker diff -f ${name}/${version} 
