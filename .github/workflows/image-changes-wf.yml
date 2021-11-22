@@ -26,28 +26,29 @@ jobs:
     - name: "image modifications"
       run: |
         docker run -d --name wordpress-orig wluns32/wordpress-lamp &
-        # given an exported docker image
-        # use container-diff to extract a summary of the modifications
-        #Export the image to a .tar file
-        docker save wluns32/wordpress-lamp > image.tar 
-        container-diff analyze -t sizelayer image.tar
-        container-diff analyze -t history image.tar
-        container-diff analyze -t metadata image.tar
-        # decompress the image and access the blobs to search for suspicious files 
-        tar -xf image.tar
-        #Export the image to a .tar file
-        docker save flask:latest > image.tar 
-        docker load < image.tar 
-        # find added/modified files in docker images
-        # Red means added and yellow means modified  
-        #  no access the content of the different stages of the image      
-        dive flask:latest
-        tar -xf image.tar
-        for d in `find * -maxdepth 0 -type d`; do cd $d; tar -xf ./layer.tar; cd ..; done
-        docker run -d --name wordpress-orig wluns32/wordpress-lamp
-        # save the current state of a container, including all the changes to a new image
-        docker commit "current state of image" wordpress-orig wordpress-orig-curr
-        #makes a tar archive of the image to be imported
-        docker export wordpress-orig > evidence_img_wordpress.tar
-        #hash the file to verify its integrity when copying it to other media
-        sha256sum evidence_img_wordpress.tar > evidence_img_wordpress_hash.txt
+        docker container ls
+        # # given an exported docker image
+        # # use container-diff to extract a summary of the modifications
+        # #Export the image to a .tar file
+        # docker save wluns32/wordpress-lamp > image.tar 
+        # container-diff analyze -t sizelayer image.tar
+        # container-diff analyze -t history image.tar
+        # container-diff analyze -t metadata image.tar
+        # # decompress the image and access the blobs to search for suspicious files 
+        # tar -xf image.tar
+        # #Export the image to a .tar file
+        # docker save flask:latest > image.tar 
+        # docker load < image.tar 
+        # # find added/modified files in docker images
+        # # Red means added and yellow means modified  
+        # #  no access the content of the different stages of the image      
+        # dive flask:latest
+        # tar -xf image.tar
+        # for d in `find * -maxdepth 0 -type d`; do cd $d; tar -xf ./layer.tar; cd ..; done
+        # docker run -d --name wordpress-orig wluns32/wordpress-lamp
+        # # save the current state of a container, including all the changes to a new image
+        # docker commit "current state of image" wordpress-orig wordpress-orig-curr
+        # #makes a tar archive of the image to be imported
+        # docker export wordpress-orig > evidence_img_wordpress.tar
+        # #hash the file to verify its integrity when copying it to other media
+        # sha256sum evidence_img_wordpress.tar > evidence_img_wordpress_hash.txt

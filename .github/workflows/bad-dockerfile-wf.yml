@@ -38,13 +38,13 @@ jobs:
         # Query all the labels inside a built image
         docker inspect imiell/bad-dockerfile | jq -M '.[].Config.Labels'
     # https://github.com/ianmiell/bad-dockerfile
-    - name: "docker build bad bocker source"
-      run: |
-        git clone https://github.com/ianmiell/bad-dockerfile
-        cd bad-dockerfile && docker build -t bad-dockerfile . 
-        docker image ls  
-        docker inspect \
-          -f '{{ index .Config.Labels "org.label-schema.description" }}' \
-          imiell/bad-dockerfile
-        # Query all the labels inside a built image
-        docker inspect imiell/bad-dockerfile | jq -M '.[].Config.Labels'
+    # - name: "docker build bad bocker source"
+    #   run: |
+    #     git clone https://github.com/ianmiell/bad-dockerfile
+    #     cd bad-dockerfile && docker build -t bad-dockerfile . 
+    #     docker image ls  
+    #     docker inspect \
+    #       -f '{{ index .Config.Labels "org.label-schema.description" }}' \
+    #       imiell/bad-dockerfile
+    #     # Query all the labels inside a built image
+    #     docker inspect imiell/bad-dockerfile | jq -M '.[].Config.Labels'

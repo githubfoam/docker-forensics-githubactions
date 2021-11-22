@@ -8,9 +8,49 @@ on:
 
 jobs:
 
+  ubuntu-latest-plaso-build-job:
+    name: "build plaso ubuntu latest"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting"
+      run: |
+        hostnamectl status
+        lsb_release -a
+        lsb_release -d
+        cat /etc/lsb-release
+        cat /etc/issue
+        cat /etc/os-release
+        sudo apt-get install -y neofetch && neofetch  \
+    - name: "plaso build"
+      run: |
+        # https://plaso.readthedocs.io/en/latest/sources/user/Installing-with-docker.html
+        git clone https://github.com/log2timeline/plaso
+        cd plaso/config/docker
+        docker build -f Dockerfile .
+        #Testing your Plaso Docker image
+        docker run log2timeline/plaso log2timeline.py --version
+        docker container ls
+        docker image ls
+        # determine which Plaso processes are running
+        top -p `ps -ef | grep log2timeline.py | grep python | awk '{ print $2 }' | tr '\n' ',' | sed 's/,$//'`
+    - name: "Copying the Plaso Docker image to a non-Internet connected system"
+      run: |
+        # https://plaso.readthedocs.io/en/latest/sources/user/Installing-with-docker.html
+        git clone https://github.com/log2timeline/plaso
+        cd plaso/config/docker
+        docker build -f Dockerfile .
+        #Testing your Plaso Docker image
+        docker run log2timeline/plaso log2timeline.py --version
+        docker container ls
+        docker image ls
+        #  export the image
+        docker save <CONTAINER_NAME> | gzip -c > saved_docker_image.tgz
+        zcat saved_docker_image.tgz | docker load
 
-  ubuntu-image-modification-latest-job:
-    name: "image modification ubuntu latest"
+
+  ubuntu-latest-plaso-job:
+    name: "plaso ubuntu latest"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -28,7 +68,7 @@ jobs:
         # Install Log2Timeline
         # https://plaso.readthedocs.io/en/latest/sources/user/Ubuntu-Packaged-Release.html
         # add the GIFT PPA
-        add-apt-repository ppa:gift/stable
+        sudo add-apt-repository ppa:gift/stable
         apt-get update -qy && apt-get install plaso-tools -qy
         #Log2Timeline
         docker run -d --name wordpress-orig wluns32/wordpress-lamp
