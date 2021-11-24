@@ -39,10 +39,14 @@ jobs:
         # download it from the container to check for malicious activity with
         # Error: No such container:path: wordpress-orig:/etc/shadow
         # docker cp wordpress:/etc/shadow .
-        # docker run -d --name wordpress-orig wluns32/wordpress-lamp &
-        # # compare it with the original one running a new container 
-        # docker cp wordpress-orig:/etc/shadow original_shadow
+        docker cp wordpress:/var/lib/mysql/auto.cnf .
+        ls -lai
+        docker run -d --name wordpress-orig wluns32/wordpress-lamp &
+        # compare it with the original one running a new container 
+        docker cp wordpress-orig:/var/lib/mysql/auto.cnf auto.cnf_shadow
+        ls -lai
         # diff original_shadow shadow
+        # diff auto.cnf_shadowauto.cnf
         # # access the container and check it, non-interactive
         # docker exec -it wordpress ls -lai /etc/shadow
  

@@ -31,10 +31,10 @@ jobs:
         # given an exported docker image
         # use container-diff to extract a summary of the modifications
         #Export the image to a .tar file
-        touch image.tar  #faking it
-        du image.tar
-        docker save wluns32/wordpress-lamp > image.tar 
-        du image.tar
+        # touch image.tar  #faking it
+        # du image.tar
+        # docker save wluns32/wordpress-lamp > image.tar 
+        # du image.tar
         # container-diff analyze -t sizelayer image.tar
         # container-diff analyze -t history image.tar
         # container-diff analyze -t metadata image.tar
