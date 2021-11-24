@@ -48,7 +48,8 @@ jobs:
         docker cp wordpress-orig:/var/lib/mysql/auto.cnf auto.cnf_shadow
         ls -lai
         # diff original_shadow shadow
-        diff auto.cnf_shadow auto.cnf
+        diff auto.cnf_shadow auto.cnf > auto.conf_diff.txt
+        cat auto.conf_diff.txt
         # # access the container and check it, non-interactive
         docker container ls
         docker exec wordpress ls -lai /var/lib/mysql
