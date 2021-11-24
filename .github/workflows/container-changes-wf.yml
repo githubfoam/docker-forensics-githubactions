@@ -51,5 +51,5 @@ jobs:
         diff auto.cnf_shadow auto.cnf
         # # access the container and check it, non-interactive
         docker container ls
-        docker exec wordpress ls -lai /etc/shadow
+        docker exec wordpress ls -lai /var/lib/mysql
  
