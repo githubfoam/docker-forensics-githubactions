@@ -42,12 +42,14 @@ jobs:
         docker cp wordpress:/var/lib/mysql/auto.cnf .
         ls -lai
         docker run -d --name wordpress-orig wluns32/wordpress-lamp
+        docker container ls
         docker diff wordpress 
         # compare it with the original one running a new container 
         docker cp wordpress-orig:/var/lib/mysql/auto.cnf auto.cnf_shadow
         ls -lai
         # diff original_shadow shadow
-        # diff auto.cnf_shadowauto.cnf
+        diff auto.cnf_shadowauto.cnf
         # # access the container and check it, non-interactive
-        # docker exec -it wordpress ls -lai /etc/shadow
+        docker container ls
+        docker exec wordpress ls -lai /etc/shadow
  
