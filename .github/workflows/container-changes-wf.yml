@@ -35,21 +35,20 @@ jobs:
         #D - Deleted File
         #C - Changed File
         #A - Added File
-        docker diff wordpress      
+        # docker diff wordpress 
+        docker diff wordpress > wordpress_docker_diff.txt     
+        cat wordpress_docker_diff.txt
         # download it from the container to check for malicious activity with
-        # Error: No such container:path: wordpress-orig:/etc/shadow
-        # docker cp wordpress:/etc/shadow .
         docker cp wordpress:/var/lib/mysql/auto.cnf .
-        ls -lai
+        cat auto.cnf
         docker run -d --name wordpress-orig wluns32/wordpress-lamp
         docker container ls
-        docker diff wordpress 
+        docker diff wordpress-orig > wordpress-orig_docker_diff.txt 
+        cat wordpress-orig_docker_diff.txt 
         # compare it with the original one running a new container 
-        docker cp wordpress-orig:/var/lib/mysql/auto.cnf auto.cnf_shadow
+        # docker cp wordpress-orig:/var/lib/mysql/auto.cnf 
         ls -lai
-        # diff original_shadow shadow
-        # diff auto.cnf_shadow auto.cnf > auto.conf_diff.txt
-        # cat auto.conf_diff.txt
+        diff wordpress-orig_docker_diff.txt wordpress_docker_diff.txt
         # # access the container and check it, non-interactive
         docker container ls
         docker exec wordpress ls -lai /var/lib/mysql
