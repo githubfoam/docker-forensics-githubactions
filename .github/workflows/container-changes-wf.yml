@@ -47,9 +47,9 @@ jobs:
         cat wordpress-orig_docker_diff.txt 
         # compare it with the original one running a new container 
         # docker cp wordpress-orig:/var/lib/mysql/auto.cnf 
-        ls -lai
-        diff wordpress-orig_docker_diff.txt wordpress_docker_diff.txt > diff.txt
-        cat diff.txt
+        # ls -lai
+        # diff wordpress-orig_docker_diff.txt wordpress_docker_diff.txt > diff.txt
+        # cat diff.txt
         # # access the container and check it, non-interactive
         docker container ls
         docker exec wordpress ls -lai /var/lib/mysql
