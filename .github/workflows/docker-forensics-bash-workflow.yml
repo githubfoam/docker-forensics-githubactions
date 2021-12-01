@@ -23,21 +23,33 @@ jobs:
         cat /etc/os-release
         sudo apt-get install -y neofetch && neofetch  
         sudo apt-get install -y neofetch && neofetch  
-    - name: "image history"
+    - name: "docker image history"
       run: |
         #run on the background
         docker run -d --name test  alpine:latest ls
         docker container ls
         docker ps -a
         docker history alpine:latest
+    - name: "docker events"
+      run: |
+        #run on the background
+        docker events --filter 'image=alpine' > alpine_events.txt &
+        docker run -d --name test1  alpine:latest ls
+        docker image ls
+        docker container ls
+        docker ps -a
+        docker container stop test1
+        cat alpine_events.txt 
+        sudo docker container start test1
+        cat alpine_events.txt 
     - name: "apache2 image"
       run: |
         #run on the background
         docker run -d --name apache2-container -e TZ=UTC -p 8080:80 ubuntu/apache2:2.4-21.10_beta
         docker image ls
         docker container ls 
-        docker history ubuntu/apache2:2.4-21.10_beta
-        docker events --filter 'image=ubuntu/apache2:2.4-21.10_beta'
+        # docker history ubuntu/apache2:2.4-21.10_beta
+        # docker events --filter 'image=ubuntu/apache2:2.4-21.10_beta'
         # docker events --since '2021-01-12'
         # # docker top apache2-container # processes of container
         # docker port apache2-container # show all mapped ports of container 
