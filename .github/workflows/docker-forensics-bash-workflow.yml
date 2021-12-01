@@ -26,7 +26,7 @@ jobs:
       run: |
         #run on the background
         docker run -d --name apache2-container -e TZ=UTC -p 8080:80 ubuntu/apache2:2.4-21.10_beta &
-        docker image ls
+        # docker image ls
         docker container ls 
         # docker history ubuntu/apache2:2.4-21.10_beta
         # docker events --filter 'ubuntu/apache2:2.4-21.10_beta' 
