@@ -29,7 +29,7 @@ jobs:
         docker image ls
         docker container ls 
         docker history ubuntu/apache2:2.4-21.10_beta
-        docker events --filter 'ubuntu/apache2:2.4-21.10_beta' 
+        docker events --filter 'image=ubuntu/apache2:2.4-21.10_beta'
         docker events --since '2021-01-12'
         docker top apache2-container # processes of container
         docker port apache2-container # show all mapped ports of container 
