@@ -1,0 +1,63 @@
+name: "dockerslim   CI workflow"
+
+
+on:
+  push:
+    branches: [ test ]
+
+
+jobs:
+
+
+  ubuntu-latest-dockerslim-job:
+    name: "dockerslim ubuntu latest"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting"
+      run: |
+        hostnamectl status
+        lsb_release -a
+        lsb_release -d
+        cat /etc/lsb-release
+        cat /etc/issue
+        cat /etc/os-release
+        sudo apt-get install -y neofetch && neofetch   
+    - name: "dockerslim"
+      run: |
+        #https://github.com/docker-slim/docker-slim
+        curl -L -o ds.tar.gz https://downloads.dockerslim.com/releases/1.37.3/dist_linux.tar.gz
+        tar -xvf ds.tar.gz
+        mv  dist_linux/docker-slim /usr/local/bin/
+        mv  dist_linux/docker-slim-sensor /usr/local/bin/   
+    - name: "dockerslim Scripted Install"
+      run: |
+        #https://github.com/docker-slim/docker-slim
+        curl -sL https://raw.githubusercontent.com/docker-slim/docker-slim/master/scripts/install-dockerslim.sh | sudo -E bash -          
+    - name: "dockerslim docker"
+      run: |
+        #https://github.com/docker-slim/docker-slim
+        docker pull dslim/docker-slim
+
+
+  macos-latest-dockerslim-job:
+    name: "dockerslim macos latest"
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting" 
+    - name: "dockerslim"
+      run: |
+        #https://github.com/docker-slim/docker-slim
+        curl -L -o ds.zip https://downloads.dockerslim.com/releases/1.37.3/dist_mac.zip
+        unzip ds.zip
+        mv  dist_mac/docker-slim /usr/local/bin/
+        mv  dist_mac/docker-slim-sensor /usr/local/bin/    
+    - name: "dockerslim Scripted Install"
+      run: |
+        #https://github.com/docker-slim/docker-slim
+        curl -sL https://raw.githubusercontent.com/docker-slim/docker-slim/master/scripts/install-dockerslim.sh | sudo -E bash -             
+    - name: "dockerslim brew"
+      run: |
+        #https://github.com/docker-slim/docker-slim
+        brew install docker-slim
