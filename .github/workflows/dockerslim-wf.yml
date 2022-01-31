@@ -45,7 +45,6 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
-    - name: "os fingerprinting" 
     - name: "dockerslim"
       run: |
         #https://github.com/docker-slim/docker-slim
